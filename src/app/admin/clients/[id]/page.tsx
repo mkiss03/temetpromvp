@@ -2,6 +2,8 @@ import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { getCurrentTenant } from '@/lib/auth/permissions'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { NotesSection } from '@/components/admin/notes-section'
+import { TasksSection } from '@/components/admin/tasks-section'
 import { formatDateTime } from '@/lib/utils'
 import { Mail, Phone, MapPin, Calendar, FileText } from 'lucide-react'
 
@@ -123,6 +125,20 @@ export default async function ClientDetailPage({ params }: ClientDetailPageProps
               </CardContent>
             </Card>
           )}
+
+          {/* Notes Section */}
+          <NotesSection
+            tenantId={tenant.id}
+            entityType="client"
+            entityId={client.id}
+          />
+
+          {/* Tasks Section */}
+          <TasksSection
+            tenantId={tenant.id}
+            entityType="client"
+            entityId={client.id}
+          />
         </div>
 
         {/* Sidebar */}

@@ -2,10 +2,18 @@ import { createClient } from '@/lib/supabase/server'
 import { getCurrentTenant } from '@/lib/auth/permissions'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { LeadFilters } from '@/components/admin/lead-filters'
 import Link from 'next/link'
 import { formatDateTime } from '@/lib/utils'
 
-export default async function LeadsPage() {
+interface LeadsPageProps {
+  searchParams: {
+    search?: string
+    status?: string
+  }
+}
+
+export default async function LeadsPage({ searchParams }: LeadsPageProps) {
   const tenant = await getCurrentTenant()
 
   if (!tenant) {
@@ -14,12 +22,25 @@ export default async function LeadsPage() {
 
   const supabase = await createClient()
 
-  const { data: leads } = await supabase
+  // Build query
+  let query = supabase
     .from('leads')
     .select('*')
     .eq('tenant_id', tenant.id)
     .is('archived_at', null)
-    .order('created_at', { ascending: false })
+
+  // Apply status filter
+  if (searchParams.status && searchParams.status !== 'all') {
+    query = query.eq('status', searchParams.status)
+  }
+
+  // Apply search filter
+  if (searchParams.search) {
+    const searchTerm = `%${searchParams.search}%`
+    query = query.or(`full_name.ilike.${searchTerm},email.ilike.${searchTerm},phone.ilike.${searchTerm}`)
+  }
+
+  const { data: leads } = await query.order('created_at', { ascending: false })
 
   const statusLabels: Record<string, string> = {
     new: 'Új',
@@ -34,6 +55,9 @@ export default async function LeadsPage() {
         <h1 className="text-3xl font-bold mb-2">Megkeresések</h1>
         <p className="text-slate-600">Az összes beérkezett érdeklődés</p>
       </div>
+
+      {/* Filters */}
+      <LeadFilters />
 
       <Card>
         <CardHeader>

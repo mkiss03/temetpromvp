@@ -5,6 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { LeadStatusUpdate } from '@/components/admin/lead-status-update'
 import { ConvertToClientButton } from '@/components/admin/convert-to-client-button'
+import { NotesSection } from '@/components/admin/notes-section'
+import { TasksSection } from '@/components/admin/tasks-section'
 import { formatDateTime } from '@/lib/utils'
 import { Mail, Phone, MapPin, Calendar } from 'lucide-react'
 
@@ -120,6 +122,20 @@ export default async function LeadDetailPage({ params }: LeadDetailPageProps) {
               </CardContent>
             </Card>
           )}
+
+          {/* Notes Section */}
+          <NotesSection
+            tenantId={tenant.id}
+            entityType="lead"
+            entityId={lead.id}
+          />
+
+          {/* Tasks Section */}
+          <TasksSection
+            tenantId={tenant.id}
+            entityType="lead"
+            entityId={lead.id}
+          />
         </div>
 
         {/* Sidebar */}
