@@ -6,6 +6,7 @@ import { NotesSection } from '@/components/admin/notes-section'
 import { TasksSection } from '@/components/admin/tasks-section'
 import { formatDateTime } from '@/lib/utils'
 import { Mail, Phone, MapPin, Calendar, FileText } from 'lucide-react'
+import type { Database } from '@/types/database.types'
 
 interface ClientDetailPageProps {
   params: {
@@ -34,7 +35,7 @@ export default async function ClientDetailPage({ params }: ClientDetailPageProps
   }
 
   // Get related lead if exists
-  let relatedLead = null
+  let relatedLead: Database['public']['Tables']['leads']['Row'] | null = null
   if (client.created_from_lead_id) {
     const { data } = await supabase
       .from('leads')

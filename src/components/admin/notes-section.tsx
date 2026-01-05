@@ -30,6 +30,7 @@ export function NotesSection({ tenantId, entityType, entityId }: NotesSectionPro
 
   useEffect(() => {
     fetchNotes()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [entityType, entityId])
 
   async function fetchNotes() {

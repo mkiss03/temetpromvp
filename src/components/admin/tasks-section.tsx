@@ -46,6 +46,7 @@ export function TasksSection({ tenantId, entityType, entityId }: TasksSectionPro
 
   useEffect(() => {
     fetchTasks()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [entityType, entityId])
 
   async function fetchTasks() {
